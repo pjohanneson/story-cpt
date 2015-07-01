@@ -9,6 +9,7 @@
 class PJ_Story {
 
 	const POST_TYPE = 'pj_story';
+	const PREFIX = '_pjs_';
 
 	/**
 	 * Constructor for the Fiction class
@@ -51,7 +52,7 @@ class PJ_Story {
 			'label'               => __( self::POST_TYPE, 'pj-story' ),
 			'description'         => __( 'Stories', 'pj-story' ),
 			'labels'              => $labels,
-			'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'trackbacks', 'revisions', 'custom-fields', 'page-attributes', ),
+			'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'trackbacks', 'revisions', 'page-attributes', ),
 			'taxonomies'          => array( 'story_tag', 'story_category' ),
 			'hierarchical'        => false,
 			'public'              => true,
@@ -74,8 +75,98 @@ class PJ_Story {
 
 	/**
 	 * Generate the meta boxes for the 'fiction' post type
+	 * @param array $metaboxes Array of extant metaboxes
+	 * @return array The filtered metaboxes
 	 */
 	public static function metaboxes( $metaboxes = array() ) {
+
+		// reviews
+		// group:
+		// 	date
+		// 	reviewer
+		// 	url
+		// 	text
+		$review_fields = array(
+			array(
+				'id' => self::PREFIX . 'review_date',
+				'name' => __( 'Date', 'pj-story' ),
+				'type' => 'date_unix',
+				),
+			array(
+				'id' => self::PREFIX . 'reviewer',
+				'name' => __( 'Reviewer', 'pj-story' ),
+				'type' => 'text',
+				'cols' => 6, 
+				),
+			array(
+				'id' => self::PREFIX . 'reviewer_url',
+				'name' => __( 'URL', 'pj-story' ),
+				'type' => 'url',
+				'cols' => 6,
+				),
+			array(
+				'id' => self::PREFIX . 'review',
+				'name' => __( 'Review', 'pj-story' ),
+				'type' => 'wysiwyg',
+				),
+			);
+		$review = array(
+			'id' => self::PREFIX . 'review_group',
+			'name' => __( 'Reviews', 'pj-story' ),
+			'type' => 'group',
+			'repeatable' => true,
+			'fields' => $review_fields,
+			);
+
+		// publication details
+		//	date
+		//	publication
+		//	URL
+
+		$publication_fields = array(
+			array(
+				'id' => self::PREFIX . 'publication',
+				'name' => __( 'Publication', 'pj-story' ),
+				'type' => 'text',
+				'cols' => 6,
+				),
+			array(
+				'id' => self::PREFIX . 'publication_url',
+				'name' => __( 'URL', 'pj-story' ),
+				'type' => 'url',
+				'cols' => 6,
+				),
+			array(
+				'id' => self::PREFIX . 'publication_date',
+				'name' => __( 'Publication Date', 'pj-story' ),
+				'type' => 'date_unix',
+				),
+			);
+		$publication = array(
+			'id' => self::PREFIX . 'publication_group',
+			'name' => __( 'Publication Details', 'pj-story' ),
+			'type' => 'group',
+			'fields' => $publication_fields,
+			);
+
+		// Meta box area
+		$story_boxes = array(
+			'id' => self::PREFIX . 'story_boxes',
+			'title' => __( 'Story Details', 'pj-story' ),
+			'pages' => array( self::POST_TYPE ),
+			'fields' =>  array( 
+				$review, 
+				$publication, 
+				), 
+			'priority' => 'high',
+			);
+
+		$metaboxes[] = $story_boxes;
+
+
+
+
+
 
 		return $metaboxes;
 	}

@@ -31,7 +31,14 @@ License: GPL v2 or later
  * **********************************************************************
  */
 
+// Custom Meta Box library
+if( ! function_exists( 'cmb_init' ) ) {
+	require_once( 'lib/cmb/custom-meta-boxes.php' );
+}
+
 require_once( 'class-pj-story.php' );
+require_once( 'class-pj-taxonomies.php' );
+
 register_activation_hook( __FILE__, function() {
 	PJ_Story::post_type();
 	flush_rewrite_rules();
@@ -40,3 +47,5 @@ register_activation_hook( __FILE__, function() {
 register_deactivation_hook( __FILE__, function() {
 	flush_rewrite_rules();
 } );
+
+new PJ_Story();
