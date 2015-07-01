@@ -75,7 +75,7 @@ class PJ_Story {
 	/**
 	 * Generate the meta boxes for the 'fiction' post type
 	 */
-	function metaboxes( $metaboxes = array() ) {
+	public static function metaboxes( $metaboxes = array() ) {
 
 		return $metaboxes;
 	}
