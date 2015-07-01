@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: Fiction Custom Post Type
-Plugin URI: http://patj.ca/wp/plugins/fiction-cpt
+Plugin Name: Story Custom Post Type
+Plugin URI: http://patj.ca/wp/plugins/story-cpt
 Description: Generates the "Fiction" CPT and the assorted metaboxes & tools to go with it
 Version: 0.1
 Author: Patrick Johanneson
@@ -30,3 +30,13 @@ License: GPL v2 or later
  * GNU General Public License for more details.
  * **********************************************************************
  */
+
+require_once( 'class-pj-story.php' );
+register_activation_hook( __FILE__, function() {
+	PJ_Story::post_type();
+	flush_rewrite_rules();
+} );
+
+register_deactivation_hook( __FILE__, function() {
+	flush_rewrite_rules();
+} );
