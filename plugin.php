@@ -10,7 +10,7 @@ License: GPL v2 or later
 */
 
 /**
- * Copyright (c) 2015 . All rights reserved.
+ * Copyright (c) 2015 Patrick Johanneson. All rights reserved.
  *
  * Released under the GPL license
  * http://www.opensource.org/licenses/gpl-license.php
