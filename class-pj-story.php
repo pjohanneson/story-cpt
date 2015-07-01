@@ -163,11 +163,6 @@ class PJ_Story {
 
 		$metaboxes[] = $story_boxes;
 
-
-
-
-
-
 		return $metaboxes;
 	}
 }

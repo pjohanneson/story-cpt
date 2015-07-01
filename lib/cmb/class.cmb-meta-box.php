@@ -6,7 +6,7 @@
 class CMB_Meta_Box {
 
 	protected $_meta_box;
-	private $fields = array
+	private $fields = array();
 	
 	function __construct( $meta_box ) {
 
