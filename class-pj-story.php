@@ -16,8 +16,10 @@ class PJ_Story {
 	 */
 	function __construct() {
 		add_action( 'init', array( $this, 'post_type' ) );
-
 		add_filter( 'cmb_meta_boxes', array( $this, 'metaboxes' ) );
+		add_shortcode( 'fiction', array( $this, 'fiction_shortcode_cb' ) );
+		add_filter( 'template_include', array( $this, 'template_selector' ) );
+
 	}
 
 	/**
@@ -164,5 +166,45 @@ class PJ_Story {
 		$metaboxes[] = $story_boxes;
 
 		return $metaboxes;
+	}
+
+	public static function fiction_shortcode_cb( $_atts ) {
+		$defaults = array(
+			'front_page' => is_front_page(),
+			'max' => 5,
+		);
+		$atts = shortcode_atts( $defaults, $_atts );
+
+		$content = '';
+
+		$args = array(
+			'post_type' => self::POST_TYPE,
+			'posts_per_page' => $atts['max'],
+			'post_status' => 'publish',
+			'perm' => 'readable',
+			'orderby' => 'post_title',
+			'order' => 'ASC',
+		);
+		$stories = new WP_Query( $args );
+		if( $stories->have_posts() ) {
+			while( $stories->have_posts() ) {
+				$stories->the_post();
+				$content .= '<a href="' . get_the_permalink() . '">' . get_the_title() . '</a><br />' . PHP_EOL;
+			}	
+		}
+		wp_reset_postdata();
+
+		if( 0 < strlen( $content ) ) {
+			$content = '<h2><a href="/fiction/">Fiction</a></h2>' . PHP_EOL . '<p>' . PHP_EOL . $content . '</p>' . PHP_EOL;
+		}
+
+		return $content;
+	}
+	
+	function template_selector( $template ) {
+		if( is_singular( self::POST_TYPE ) ) {
+			$template = plugin_dir_path( __FILE__ ) . 'template/single-fiction.php';
+		}
+		return $template;
 	}
 }
