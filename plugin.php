@@ -38,6 +38,7 @@ if( ! function_exists( 'cmb_init' ) ) {
 
 require_once( 'class-pj-story.php' );
 require_once( 'class-pj-taxonomies.php' );
+require_once( 'class-pj-story-widget.php' );
 
 register_activation_hook( __FILE__, function() {
 	PJ_Story::post_type();
