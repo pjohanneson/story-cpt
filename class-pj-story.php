@@ -207,4 +207,20 @@ class PJ_Story {
 		}
 		return $template;
 	}
+
+	/**
+	 * Selects a random story from the publicly-available tales.
+	 * @return WP_Post
+	 */
+	public static function random_story() {
+		$args = array(
+			'post_type' => self::POST_TYPE,
+			'has_password' => false,
+			'posts_per_page' => 1,
+			'orderby' => 'rand',
+
+		);
+		$story = new WP_Query( $args );
+		return $story->posts[0];
+	}
 }
