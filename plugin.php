@@ -1,9 +1,15 @@
 <?php
+/**
+ * Plugin loader file.
+ *
+ * @package pj_story
+ */
+
 /*
 Plugin Name: Story Custom Post Type
 Plugin URI: http://patj.ca/wp/plugins/story-cpt
 Description: Generates the "Fiction" CPT and the assorted metaboxes & tools to go with it
-Version: 0.1
+Version: 1.0.0
 Author: Patrick Johanneson
 Author URI: http://patrickjohanneson.com/
 License: GPL v2 or later
@@ -31,11 +37,12 @@ License: GPL v2 or later
  * **********************************************************************
  */
 
-// Custom Meta Box library
-if( ! function_exists( 'cmb_init' ) ) {
+// Initializes the Custom Meta Box library, if necessary.
+if ( ! function_exists( 'cmb_init' ) ) {
 	require_once( 'lib/cmb/custom-meta-boxes.php' );
 }
 
+// Loads the required files.
 require_once( 'class-pj-story.php' );
 require_once( 'class-pj-taxonomies.php' );
 require_once( 'class-pj-story-widget.php' );

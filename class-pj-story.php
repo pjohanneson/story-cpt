@@ -1,8 +1,10 @@
 <?php
 /**
  * Class file for the Story custom post type.
+ *
+ * @package pj_story
  */
- 
+
 /**
  * The Fiction class.
  */
@@ -12,18 +14,28 @@ class PJ_Story {
 	const PREFIX = '_pjs_';
 
 	/**
-	 * Constructor for the Fiction class
+	 * Constructor for the Fiction class.
+	 *
+	 * @return void
+	 * @since 1.0.0
 	 */
 	function __construct() {
+
 		add_action( 'init', array( $this, 'post_type' ) );
+		add_action( 'pre_get_posts', array( $this, 'fiction_query_modifications' ) );
+
 		add_filter( 'cmb_meta_boxes', array( $this, 'metaboxes' ) );
-		add_shortcode( 'fiction', array( $this, 'fiction_shortcode_cb' ) );
 		add_filter( 'template_include', array( $this, 'template_selector' ) );
+
+		add_shortcode( 'fiction', array( $this, 'fiction_shortcode_cb' ) );
 
 	}
 
 	/**
-	 * Register the 'fiction' post type
+	 * Registers the 'fiction' post type.
+	 *
+	 * @return void
+	 * @since 1.0.0
 	 */
 	static public function post_type() {
 
@@ -51,10 +63,10 @@ class PJ_Story {
 			'feeds'               => true,
 		);
 		$args = array(
-			'label'               => __( self::POST_TYPE, 'pj-story' ),
+			'label'               => __( 'Stories', 'pj-story' ),
 			'description'         => __( 'Stories', 'pj-story' ),
 			'labels'              => $labels,
-			'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'trackbacks', 'revisions', 'page-attributes', ),
+			'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'trackbacks', 'revisions', 'page-attributes' ),
 			'taxonomies'          => array( 'story_tag', 'story_category' ),
 			'hierarchical'        => false,
 			'public'              => true,
@@ -76,18 +88,14 @@ class PJ_Story {
 	}
 
 	/**
-	 * Generate the meta boxes for the 'fiction' post type
-	 * @param array $metaboxes Array of extant metaboxes
-	 * @return array The filtered metaboxes
+	 * Generates the meta boxes for the 'fiction' post type.
+	 *
+	 * @param array $metaboxes Array of extant metaboxes.
+	 * @return array The filtered metaboxes.
+	 * @since 1.0.0
 	 */
 	public static function metaboxes( $metaboxes = array() ) {
 
-		// reviews
-		// group:
-		// 	date
-		// 	reviewer
-		// 	url
-		// 	text
 		$review_fields = array(
 			array(
 				'id' => self::PREFIX . 'review_date',
@@ -98,7 +106,7 @@ class PJ_Story {
 				'id' => self::PREFIX . 'reviewer',
 				'name' => __( 'Reviewer', 'pj-story' ),
 				'type' => 'text',
-				'cols' => 6, 
+				'cols' => 6,
 				),
 			array(
 				'id' => self::PREFIX . 'reviewer_url',
@@ -119,11 +127,6 @@ class PJ_Story {
 			'repeatable' => true,
 			'fields' => $review_fields,
 			);
-
-		// publication details
-		//	date
-		//	publication
-		//	URL
 
 		$publication_fields = array(
 			array(
@@ -151,15 +154,15 @@ class PJ_Story {
 			'fields' => $publication_fields,
 			);
 
-		// Meta box area
+		// Sets up the metabox area.
 		$story_boxes = array(
 			'id' => self::PREFIX . 'story_boxes',
 			'title' => __( 'Story Details', 'pj-story' ),
 			'pages' => array( self::POST_TYPE ),
-			'fields' =>  array( 
-				$review, 
-				$publication, 
-				), 
+			'fields' => array(
+				$review,
+				$publication,
+				),
 			'priority' => 'high',
 			);
 
@@ -168,6 +171,13 @@ class PJ_Story {
 		return $metaboxes;
 	}
 
+	/**
+	 * Defines the `[fiction]` shortcode.
+	 *
+	 * @param array $_atts Attributes from the shortcode call.
+	 * @return string The shortcode content.
+	 * @since 1.0.0
+	 */
 	public static function fiction_shortcode_cb( $_atts ) {
 		$defaults = array(
 			'front_page' => is_front_page(),
@@ -186,31 +196,43 @@ class PJ_Story {
 			'order' => 'ASC',
 		);
 		$stories = new WP_Query( $args );
-		if( $stories->have_posts() ) {
-			while( $stories->have_posts() ) {
+		if ( $stories->have_posts() ) {
+			while ( $stories->have_posts() ) {
 				$stories->the_post();
 				$content .= '<a href="' . get_the_permalink() . '">' . get_the_title() . '</a><br />' . PHP_EOL;
-			}	
+			}
 		}
 		wp_reset_postdata();
 
-		if( 0 < strlen( $content ) ) {
+		if ( 0 < strlen( $content ) ) {
 			$content = '<h2><a href="/fiction/">Fiction</a></h2>' . PHP_EOL . '<p>' . PHP_EOL . $content . '</p>' . PHP_EOL;
 		}
 
 		return $content;
 	}
-	
+
+	/**
+	 * Selects the appropriate template file.
+	 *
+	 * @param string $template The template location.
+	 * @return string The filtered template location.
+	 * @since 1.0.0
+	 */
 	function template_selector( $template ) {
-		if( is_singular( self::POST_TYPE ) ) {
+		if ( is_singular( self::POST_TYPE ) ) {
 			$template = plugin_dir_path( __FILE__ ) . 'template/single-fiction.php';
+		}
+		if ( is_post_type_archive( self::POST_TYPE ) ) {
+			$template = plugin_dir_path( __FILE__ ) . 'template/archive-fiction.php';
 		}
 		return $template;
 	}
 
 	/**
 	 * Selects a random story from the publicly-available tales.
-	 * @return WP_Post
+	 *
+	 * @return WP_Post A `pj_story` post selected at random.
+	 * @since 1.0.0
 	 */
 	public static function random_story() {
 		$args = array(
@@ -222,5 +244,25 @@ class PJ_Story {
 		);
 		$story = new WP_Query( $args );
 		return $story->posts[0];
+	}
+
+	/**
+	 * Alter the query in the case of the Fiction archive.
+	 *
+	 * @param WP_Query $query The query object. Passed by reference, so no need to declare globals.
+	 * @return void
+	 * @since 1.0.0
+	 */
+	function fiction_query_modifications( $query ) {
+		if ( is_admin() ) {
+			return;
+		}
+		if ( is_post_type_archive( self::POST_TYPE ) ) {
+			$query->set( 'posts_per_page', 1000 );
+			$query->set( 'has_password', false );
+			$query->set( 'orderby', 'title' );
+			$query->set( 'order', 'ASC' );
+		}
+
 	}
 }
