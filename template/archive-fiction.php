@@ -6,6 +6,7 @@
  */
 
 get_header();
+echo '<h1>Fiction</h1>' . PHP_EOL;
 if ( have_posts() ) {
 	echo '<div class="page-content">' . PHP_EOL;
 	while ( have_posts() ) {
