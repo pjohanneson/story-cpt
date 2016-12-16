@@ -53,10 +53,15 @@ class PJ_Story_List_Widget extends WP_Widget {
 		);
 		$random_story = get_posts( $post_args );
 		$story = $random_story[0];
+		// Sets up the excerpt.
+		$story_excerpt = $story->post_excerpt;
+		if ( 0 === strlen( trim( $story_excerpt ) ) ) {
+			$story_excerpt = wp_trim_words( $story->post_content, 25, '' );
+		}
 		echo '<p>';
 		echo '<strong><a href="' . get_permalink( $story->ID ) . '">' . $story->post_title . '</a></strong>&mdash;';
-		echo $story->post_excerpt;
-		echo ' <a href="' . get_permalink( $story ) . '">Read more &raquo;</a>';
+		echo $story_excerpt;
+		echo '&hellip;<a href="' . get_permalink( $story ) . '">More &raquo;</a>';
 		echo '</p>';
 
 
