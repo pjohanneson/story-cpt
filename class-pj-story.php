@@ -23,7 +23,6 @@ class PJ_Story {
 
 		add_action( 'init', array( $this, 'post_type' ) );
 		add_action( 'pre_get_posts', array( $this, 'fiction_query_modifications' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'load_css' ) );
 
 		add_filter( 'cmb_meta_boxes', array( $this, 'metaboxes' ) );
 		add_filter( 'template_include', array( $this, 'template_selector' ) );
@@ -170,17 +169,6 @@ class PJ_Story {
 		$metaboxes[] = $story_boxes;
 
 		return $metaboxes;
-	}
-
-	/**
-	 * Loads the CSS file for the plugin.
-	 *
-	 * @return void
-	 * @since 1.0.0
-	 */
-	public static function load_css() {
-		wp_register_style( 'pj-story', plugins_url( 'css/pj-story.css', __FILE__ ) );
-		wp_enqueue_style( 'pj-story' );
 	}
 
 	/**
