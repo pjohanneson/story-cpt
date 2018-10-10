@@ -56,4 +56,15 @@ register_deactivation_hook( __FILE__, function() {
 	flush_rewrite_rules();
 } );
 
+/**
+ * Gets the publication data from the PJ_Story class.
+ *
+ * @param  int $id The post ID.
+ * @return string  The publication data as a string.
+ * @since  1.0.0
+ */
+function pjs_get_publication_data( $id = 0 ) {
+	return PJ_Story::get_publication_data( $id );
+}
+
 new PJ_Story();

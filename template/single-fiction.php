@@ -10,6 +10,9 @@ if( have_posts() ) {
 	while( have_posts() ) {
 		the_post();
 		the_title( '<h1>', '</h1>' . PHP_EOL );
+		if ( function_exists( 'pjs_get_publication_data' ) ) {
+			echo pjs_get_publication_data( get_the_ID () );
+		}
 		the_content();
 	}
 	echo( '</div> <!-- .page-content -->' . PHP_EOL );

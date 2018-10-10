@@ -11,7 +11,11 @@ if ( have_posts() ) {
 	echo '<div class="page-content">' . PHP_EOL;
 	while ( have_posts() ) {
 		the_post();
-		the_title( '<a href="' . get_permalink() . '">', '</a><br />' . PHP_EOL );
+		the_title( '<a href="' . get_permalink() . '">', '</a>' );
+		if ( function_exists( 'pjs_get_publication_data' ) ) {
+			echo pjs_get_publication_data( get_the_ID () );
+		}
+		echo '<br />' . PHP_EOL;
 	}
 	echo '</div> <!-- .page-content -->' . PHP_EOL;
 }

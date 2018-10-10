@@ -23,6 +23,7 @@ class PJ_Story {
 
 		add_action( 'init', array( $this, 'post_type' ) );
 		add_action( 'pre_get_posts', array( $this, 'fiction_query_modifications' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'styles' ) );
 
 		add_filter( 'cmb_meta_boxes', array( $this, 'metaboxes' ) );
 		add_filter( 'template_include', array( $this, 'template_selector' ) );
@@ -212,6 +213,18 @@ class PJ_Story {
 	}
 
 	/**
+	 * Load the styles.
+	 *
+	 * @return void
+	 * @since  1.0.0
+	 */
+	function styles() {
+		if ( is_singular( self::POST_TYPE ) || is_post_type_archive( self::POST_TYPE ) ) {
+			wp_enqueue_style( 'pjs-story', plugins_url( 'css/pjs-styles.css', __FILE__ ), array(), false );
+		}
+	}
+
+	/**
 	 * Selects the appropriate template file.
 	 *
 	 * @param string $template The template location.
@@ -263,6 +276,56 @@ class PJ_Story {
 			$query->set( 'orderby', 'title' );
 			$query->set( 'order', 'ASC' );
 		}
+	}
 
+	/**
+	 * Gets the publication metadata.
+	 *
+	 * @param  int $id The post ID.
+	 * @return string  The publication data, or an empty string.
+	 * @since  1.0.0
+	 */
+	public static function get_publication_data( $id = 0 ) {
+		$data = '';
+		$pub = '';
+		$date = '';
+		$single = true;
+		$meta = get_post_meta( $id, self::PREFIX . 'publication_group', $single );
+		if ( ! empty( $meta ) ) {
+			if ( ! empty( $meta[ self::PREFIX . 'publication' ] ) ) {
+				$pub .= $meta[ self::PREFIX . 'publication' ];
+			}
+			if ( ! empty( $meta[ self::PREFIX . 'publication_url' ] ) ) {
+				if ( ! empty( $pub ) ) {
+					$pub = '<a href="' . esc_url( $meta[ self::PREFIX . 'publication_url' ] ) . '">' . $pub . '</a>';
+				} else {
+					$pub = '<a href="' . esc_url( $meta[ self::PREFIX . 'publication_url' ] ) . '">' . esc_url( $meta[ self::PREFIX . 'publication_url' ] ) . '</a>';
+				}
+				if ( ! empty( $meta[ self::PREFIX . 'publication_date' ] ) ) {
+					$date = ' in ' . date( 'F, Y', intval( $meta[ self::PREFIX . 'publication_date' ] ) );
+				}
+				if ( ! empty( $pub ) || ! empty( $date ) ) {
+					if ( is_post_type_archive( self::POST_TYPE ) ) {
+						$data = '<span class="pjs-publication-data">&mdash;Published ';
+					} else {
+						$data = '<p class="pjs-publication-data">Published';
+					}
+
+					if ( ! empty( $pub ) ) {
+						$data .= ' in ' . $pub;
+					}
+					if ( ! empty( $date ) ) {
+						$data .= $date;
+					}
+					if ( is_post_type_archive( self::POST_TYPE ) ) {
+						$data .= '</span><!-- .pjs-publication-data -->';
+					} else {
+						$data .= '</p><!-- .pjs-publication-data -->';
+					}
+				}
+			}
+		}
+
+		return $data;
 	}
 }

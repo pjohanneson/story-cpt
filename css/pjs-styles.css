@@ -1,0 +1,10 @@
+.pjs-publication-data {
+	color: #777;
+	font-size: 0.9em;
+}
+.pjs-publication-data a {
+	color: #789;
+}
+.pjs-publication-data a:hover, .pjs-publication-data a:followed {
+	color: #678
+}
