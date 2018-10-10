@@ -301,27 +301,27 @@ class PJ_Story {
 				} else {
 					$pub = '<a href="' . esc_url( $meta[ self::PREFIX . 'publication_url' ] ) . '">' . esc_url( $meta[ self::PREFIX . 'publication_url' ] ) . '</a>';
 				}
-				if ( ! empty( $meta[ self::PREFIX . 'publication_date' ] ) ) {
-					$date = ' in ' . date( 'F, Y', intval( $meta[ self::PREFIX . 'publication_date' ] ) );
+			}
+			if ( ! empty( $meta[ self::PREFIX . 'publication_date' ] ) ) {
+				$date = ' in ' . date( 'F, Y', intval( $meta[ self::PREFIX . 'publication_date' ] ) );
+			}
+			if ( ! empty( $pub ) || ! empty( $date ) ) {
+				if ( is_post_type_archive( self::POST_TYPE ) ) {
+					$data = '<span class="pjs-publication-data">&mdash;Published ';
+				} else {
+					$data = '<p class="pjs-publication-data">Published';
 				}
-				if ( ! empty( $pub ) || ! empty( $date ) ) {
-					if ( is_post_type_archive( self::POST_TYPE ) ) {
-						$data = '<span class="pjs-publication-data">&mdash;Published ';
-					} else {
-						$data = '<p class="pjs-publication-data">Published';
-					}
 
-					if ( ! empty( $pub ) ) {
-						$data .= ' in ' . $pub;
-					}
-					if ( ! empty( $date ) ) {
-						$data .= $date;
-					}
-					if ( is_post_type_archive( self::POST_TYPE ) ) {
-						$data .= '</span><!-- .pjs-publication-data -->';
-					} else {
-						$data .= '</p><!-- .pjs-publication-data -->';
-					}
+				if ( ! empty( $pub ) ) {
+					$data .= ' in ' . $pub;
+				}
+				if ( ! empty( $date ) ) {
+					$data .= $date;
+				}
+				if ( is_post_type_archive( self::POST_TYPE ) ) {
+					$data .= '</span><!-- .pjs-publication-data -->';
+				} else {
+					$data .= '</p><!-- .pjs-publication-data -->';
 				}
 			}
 		}
