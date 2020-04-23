@@ -83,6 +83,7 @@ class PJ_Story {
 			'publicly_queryable'  => true,
 			'rewrite'             => $rewrite,
 			'capability_type'     => 'post',
+			'show_in_rest'        => true,
 		);
 		register_post_type( self::POST_TYPE, $args );
 
