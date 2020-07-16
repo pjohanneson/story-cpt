@@ -6,6 +6,8 @@
  */
 
 get_header();
+echo '<div id="primary" class="content-area">';
+echo '<main id="main" class="site-main" role="main">';
 echo '<h1>Fiction</h1>' . PHP_EOL;
 if ( have_posts() ) {
 	echo '<div class="page-content">' . PHP_EOL;
@@ -19,5 +21,7 @@ if ( have_posts() ) {
 	}
 	echo '</div> <!-- .page-content -->' . PHP_EOL;
 }
+echo '</main><!-- #main -->';
+echo '</div><!-- #primary -->';
 get_sidebar();
 get_footer();
